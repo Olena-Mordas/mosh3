@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AppError } from '../common/app-error';
+import { BadInputError } from '../common/bad-input';
+import { NotFoundError } from '../common/not-found-error';
 import { PostService } from '../services/post.service';
 
 @Component({
@@ -32,14 +35,15 @@ export class PostComponentComponent implements OnInit {
         post.id = response.id
         console.log(response);
         this.posts.splice(0,0,post);
-      },(error:Response) =>{
-        if(error.status==400){
-         // this.form.setErrors(error.json())
-        }
-        else{
-          alert('Unexpected error!')
-          console.log(error);
-        }     
+      },(error:AppError) =>{
+          if (error instanceof BadInputError){
+            //this.form.setErrors(error.originalError);
+          }
+          else{
+            alert('Unexpected error!');
+            console.log(error);
+          }
+          
       })
   }
 
@@ -48,9 +52,14 @@ export class PostComponentComponent implements OnInit {
       .subscribe(
         response =>{
         console.log(response);
-      },error =>{
-        alert('Unexpected error!')
-        console.log(error);
+      },(error:AppError) =>{
+        if(error instanceof NotFoundError){
+          alert('Post has been deleted');
+        }
+        else{
+          alert('Unexpected error!')
+          console.log(error);
+        }   
       })
   }
 
@@ -61,8 +70,8 @@ export class PostComponentComponent implements OnInit {
       let i = this.posts.indexOf(post);
       this.posts.splice(i,1)
       console.log(response);
-    },(error:Response) =>{
-      if(error.status==404){
+    },(error:AppError) =>{
+      if(error instanceof NotFoundError){
         alert('Post has been deleted');
       }
       else{
