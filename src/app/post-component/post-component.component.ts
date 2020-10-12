@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { PostService } from '../services/post.service';
 
 @Component({
   selector: 'post-component',
@@ -8,44 +8,67 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PostComponentComponent implements OnInit {
   posts:any[];
-  private url:string = 'https://jsonplaceholder.typicode.com/posts';
-
-
-  constructor(private httpClient: HttpClient){}
-
   
+  constructor(private service: PostService){}
+
   ngOnInit(): void {
-    this.httpClient.get(this.url)
-      .subscribe((response:any[]) =>{
+    this.service.getPosts()
+      .subscribe((
+        response:any[]) =>{
         console.log(response);
         this.posts = response;
+      }, error =>{
+        alert('Unexpected error!')
+        console.log(error);
       })
   }
 
   createPost(input:HTMLInputElement){
     let post:any = {title: input.value};
     input.value='';
-    this.httpClient.post(this.url, JSON.stringify(post))
-      .subscribe((response:any)=>{
+    this.service.createPost( JSON.stringify(post))
+      .subscribe(
+        (response:any)=>{
         post.id = response.id
         console.log(response);
         this.posts.splice(0,0,post);
+      },(error:Response) =>{
+        if(error.status==400){
+         // this.form.setErrors(error.json())
+        }
+        else{
+          alert('Unexpected error!')
+          console.log(error);
+        }     
       })
   }
 
   updatePost(post){
-    this.httpClient.patch(this.url+ '/' + post.id ,JSON.stringify({propertyToChange: 'newValue'}))
-      .subscribe(response =>{
+    this.service.updatePost(post.id ,JSON.stringify({propertyToChange: 'newValue'}))
+      .subscribe(
+        response =>{
         console.log(response);
+      },error =>{
+        alert('Unexpected error!')
+        console.log(error);
       })
   }
 
   deletePost(post){
-    this.httpClient.delete(this.url+ '/' + post.id)
-    .subscribe(response =>{
+    this.service.deletePost(post.id)
+    .subscribe(
+      response =>{
       let i = this.posts.indexOf(post);
       this.posts.splice(i,1)
       console.log(response);
+    },(error:Response) =>{
+      if(error.status==404){
+        alert('Post has been deleted');
+      }
+      else{
+        alert('Unexpected error!')
+        console.log(error);
+      }   
     })
   }
 }
