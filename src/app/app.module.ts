@@ -22,7 +22,8 @@ import { AppErrorHandler } from './common/app-error-handler';
     HttpClientModule
   ],
   providers: [
-    PostService
+    PostService,
+    {provide: ErrorHandler, useClass: AppErrorHandler}
   ],
   bootstrap: [AppComponent]
 })

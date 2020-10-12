@@ -20,10 +20,7 @@ export class PostComponentComponent implements OnInit {
         response:any[]) =>{
         console.log(response);
         this.posts = response;
-      }, error =>{
-        alert('Unexpected error!')
-        console.log(error);
-      })
+      }) //we removed error handling here, so it will porpagate and eventually hit the global error handler
   }
 
   createPost(input:HTMLInputElement){
@@ -39,11 +36,7 @@ export class PostComponentComponent implements OnInit {
           if (error instanceof BadInputError){
             //this.form.setErrors(error.originalError);
           }
-          else{
-            alert('Unexpected error!');
-            console.log(error);
-          }
-          
+          else throw error; //we rethrow error if its not bad input, so now it will hit global handler         
       })
   }
 
@@ -56,10 +49,7 @@ export class PostComponentComponent implements OnInit {
         if(error instanceof NotFoundError){
           alert('Post has been deleted');
         }
-        else{
-          alert('Unexpected error!')
-          console.log(error);
-        }   
+        else throw error;
       })
   }
 
@@ -74,10 +64,7 @@ export class PostComponentComponent implements OnInit {
       if(error instanceof NotFoundError){
         alert('Post has been deleted');
       }
-      else{
-        alert('Unexpected error!')
-        console.log(error);
-      }   
+      else throw error;
     })
   }
 }
