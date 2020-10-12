@@ -18,41 +18,36 @@ export class PostService {
 
   getPosts(){
     return this.httpClient.get(this.url)
-      .pipe(catchError((err:HttpErrorResponse)=>{
-        return throwError(new AppError(err));
-      }));
+    .pipe(catchError(this.handleError)
+    );
   }
 
   createPost(post:string){
     return this.httpClient.post(this.url, post)
-      .pipe(catchError((err:HttpErrorResponse)=>{
-        if(err.status==400){
-          return throwError(new BadInputError(err));
-        }
-        return throwError(new AppError(err));
-      }));
+    .pipe(catchError(this.handleError)
+    );
   }
  
   updatePost(postId,updates:string){
     return this.httpClient.patch(this.url+'/'+postId, updates)
-      .pipe(catchError((err: HttpErrorResponse)=>{
-        if (err.status==404){
-          return throwError(new NotFoundError);
-        }
-        return throwError(new AppError(err));
-      })
-    )
+      .pipe(catchError(this.handleError)
+    );
   }
 
   deletePost(postId){
     return this.httpClient.delete(this.url+'/'+postId)
-      .pipe(catchError((err: HttpErrorResponse)=>{
-        if (err.status==404){
-          return throwError(new NotFoundError);
-        }
-        return throwError(new AppError(err));
-      })
-    )
+      .pipe(catchError(this.handleError)
+    );
   }
 
+  
+  private handleError(err: Response){
+    if(err.status==400){
+      return throwError(new BadInputError(err));
+    }
+    if (err.status==404){
+      return throwError(new NotFoundError);
+    }
+    return throwError(new AppError(err));
+  }
 }
