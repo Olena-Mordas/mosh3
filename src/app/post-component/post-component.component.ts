@@ -15,7 +15,7 @@ export class PostComponentComponent implements OnInit {
   constructor(private service: PostService){}
 
   ngOnInit(): void {
-    this.service.getPosts()
+    this.service.getAll()
       .subscribe((
         response:any[]) =>{
         console.log(response);
@@ -26,7 +26,7 @@ export class PostComponentComponent implements OnInit {
   createPost(input:HTMLInputElement){
     let post:any = {title: input.value};
     input.value='';
-    this.service.createPost( JSON.stringify(post))
+    this.service.create( JSON.stringify(post))
       .subscribe(
         (response:any)=>{
         post.id = response.id
@@ -41,7 +41,7 @@ export class PostComponentComponent implements OnInit {
   }
 
   updatePost(post){
-    this.service.updatePost(post.id ,JSON.stringify({propertyToChange: 'newValue'}))
+    this.service.update(post ,JSON.stringify({propertyToChange: 'newValue'}))
       .subscribe(
         response =>{
         console.log(response);
@@ -54,7 +54,7 @@ export class PostComponentComponent implements OnInit {
   }
 
   deletePost(post){
-    this.service.deletePost(post.id)
+    this.service.delete(post.id)
     .subscribe(
       response =>{
       let i = this.posts.indexOf(post);
