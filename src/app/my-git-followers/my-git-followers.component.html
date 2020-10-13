@@ -1,0 +1,8 @@
+<h1>{{title}}</h1>
+<div *ngFor="let f of followers" class="media">
+    <img class="mr-3" [src]="f.avatar_url">
+    <div class="media-body">
+      <h5 class="mt-0">{{f.login}}</h5>
+      {{f.html_url}}
+    </div>
+</div>

@@ -8,11 +8,14 @@ import { PostComponentComponent } from './post-component/post-component.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PostService } from './services/post.service';
 import { AppErrorHandler } from './common/app-error-handler';
+import { MyGitFollowersComponent } from './my-git-followers/my-git-followers.component';
+import { GitService } from './services/git-followers.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     PostComponentComponent,
+    MyGitFollowersComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,6 +26,7 @@ import { AppErrorHandler } from './common/app-error-handler';
   ],
   providers: [
     PostService,
+    GitService,
     {provide: ErrorHandler, useClass: AppErrorHandler}
   ],
   bootstrap: [AppComponent]

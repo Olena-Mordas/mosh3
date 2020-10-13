@@ -7,7 +7,7 @@ import { DataService } from './data.service';
 })
 export class PostService extends DataService{
 
-  constructor(httpClient: HttpClient, ){
+  constructor(httpClient: HttpClient ){
     super(httpClient, 'https://jsonplaceholder.typicode.com/posts');
   }
 
